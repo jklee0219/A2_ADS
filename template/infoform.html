@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>관리정보등록</title>
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<style>
+.mbox2{margin:200px auto;width:400px;height:145px}
+.mbox{position:absolute;top:50%;left:50%;margin:-120px 0 0 -200px;width:400px}
+.mbox p, .mbox2 p{width:68px;float:left;text-align:right;margin-top:8px}
+.mbox r, .mbox2 r{width:14px;float:left;text-align:center;margin-top:6px}
+.mbox input, .mbox2 input{width:280px;float:left;margin-bottom:5px}
+.mbox button, .mbox2 button{width:100px;height:30px;float:left;margin:5px 0 0 130px}
+iframe[name='hiddenFrm']{display:none}
+</style>
+<script>
+function validateForm() {
+    var company = document.forms["frm"]["company"];
+    if (company.value == null || company.value == "") {
+        alert("업체명을 입력하여 주십시요");
+        company.focus();
+        return false;
+    }
+    
+    var password = document.forms["frm"]["password"];
+    if (password.value == null || password.value == "") {
+        alert("비밀번호를 입력하여 주십시요");
+        password.focus();
+        return false;
+    }
+    if (password.value.length < 6) {
+        alert("비밀번호는 6자리 이상이어야 합니다.");
+        password.focus();
+        return false;
+    }
+
+    frm.submit();
+}
+</script>
+<div class="mbox alert alert-success" role="alert">
+	<form name="frm" action="/comm/proc.php" onsubmit="return validateForm()" method="post" target="hiddenFrm">
+	<p>관리명</p><r>:</r> <input type="text" name="company" maxlength="50" class="form-control" placeholder="업체명을 입력하여 주십시요." value="[COMPANY_NAME]" required>
+	<p>비밀번호</p><r>:</r> <input type="password" name="password" maxlength="10" class="form-control" placeholder="비밀번호를 입력하여 주십시요." minlength=6 required>
+	<button type="submit" class="btn btn-sm btn-success">등 록</button>
+	<input type="hidden" name="type" value="infoform">
+	</form>
+</div>
+<iframe name="hiddenFrm"></iframe>
+</body>
+</html>
