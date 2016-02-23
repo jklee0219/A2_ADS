@@ -9,19 +9,21 @@ $TB_INFO    = "CREATE TABLE `TB_INFO` (
 $TB_ADS     = "CREATE TABLE `TB_ADS` (
        		   `seq` int(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '고유번호',
    			   `category` int(8) unsigned COMMENT 'TB_CATEGORY SEQ',
-               `title` varchar(500) NOT NULL DEFAULT '' COMMENT '광고명',
+               `title` varchar(500) NOT NULL DEFAULT '' COMMENT '광고그룹명',
    	           `useyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '사용여부',
    	           `delyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '삭제여부',
    			   `wdate` datetime NOT NULL DEFAULT NOW() COMMENT '등록일자',
    			   `udate` datetime DEFAULT NULL COMMENT '수정일자',
    			   `ddate` datetime DEFAULT NULL COMMENT '삭제일자',
    			   PRIMARY KEY (`seq`),
-			   FOREIGN KEY (`category`) REFERENCES `TB_CATEGORY` (`seq`)
-			   ) ENGINE=MYISAM CHARSET=utf8 COMMENT='광고스크립트 관리'";
+			   FOREIGN KEY (`category`) REFERENCES `TB_CATEGORY` (`seq`),
+			   FULLTEXT TITLE_FIDX (`title`)
+			   ) ENGINE=MYISAM CHARSET=utf8 COMMENT='광고그룹 관리'";
 
 $TB_SCRIPTS = "CREATE TABLE `TB_SCRIPTS` (
        		   `seq` int(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '고유번호',
-			   `ref` int(8) unsigned COMMENT 'TB_SCRIPTS SEQ',
+			   `ref` int(8) unsigned COMMENT 'TB_ADS SEQ',
+			   `title` varchar(500) NOT NULL DEFAULT '' COMMENT '광고명',
                `script` text COMMENT '광고스크립트',
                `width` int(1) unsigned DEFAULT 0 COMMENT '광고가로사이즈',
    			   `height` int(1) unsigned DEFAULT 0 COMMENT '광고세로사이즈',
@@ -34,7 +36,9 @@ $TB_SCRIPTS = "CREATE TABLE `TB_SCRIPTS` (
    			   `udate` datetime DEFAULT NULL COMMENT '수정일자',
    			   `ddate` datetime DEFAULT NULL COMMENT '삭제일자',
    			   PRIMARY KEY (`seq`),
-			   FOREIGN KEY (`ref`) REFERENCES `TB_ADS` (`seq`)
+			   FOREIGN KEY (`ref`) REFERENCES `TB_ADS` (`seq`),
+			   FULLTEXT TITLE_FIDX (`title`),
+			   FULLTEXT SCRIPT_FIDX (`script`)
 			   ) ENGINE=MYISAM CHARSET=utf8 COMMENT='광고스크립트 관리'";
 
 $TB_CATEGORY = "CREATE TABLE `TB_CATEGORY` (
@@ -65,3 +69,8 @@ if(mysqli_fetch_row($res)[0] == 0){ mysqli_query($dbconn, $TB_ADS); }
 
 $res = mysqli_query($dbconn, " SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '".CONNECT_DB_NAME."' and table_name = 'TB_SCRIPTS' ");
 if(mysqli_fetch_row($res)[0] == 0){ mysqli_query($dbconn, $TB_SCRIPTS); }
+
+//web 관리 temp 폴더 생성
+if(!file_exists($TEMP_FOLDER)){
+	if(!mkdir($TEMP_FOLDER, 0777, true)){ get_template("error.html",array("[MESSAGE]" => $M002)); }
+}

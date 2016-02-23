@@ -68,7 +68,7 @@ function getQueryCount($query) {
 	
 	$returnResultValue = 0;
 
-	if ($dbconn && strpos($query,"count(*)") !== false) {
+	if ($dbconn && stripos($query,"count(*)") !== false) {
 		$result = mysqli_query($dbconn,$query);
 		$returnResultValue = mysqli_fetch_row($result)[0];
 

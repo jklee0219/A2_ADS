@@ -1,7 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'].'../config.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/comm/messages.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/comm/commvar.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/comm/messages.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/comm/func.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/comm/dbconn.php';
 

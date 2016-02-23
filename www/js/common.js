@@ -27,3 +27,20 @@ function getCookie(cName) {
     }
     return unescape(cValue);
 }
+
+//ajax call
+function ajax(param,success_func){
+	$.ajax({
+		async: false,
+	    url: "/comm/proc_ajax.php",
+	    type: "POST",
+	    data: param,
+	    dataType: 'xml',
+	    error: function(xhr, status, error) {
+	    	alert("오류 : "+error);
+	    },
+	    success: function(data) {
+	    	$.isFunction(success_func) && success_func(data);
+	    }
+	});
+}
