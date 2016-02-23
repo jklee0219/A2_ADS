@@ -6,7 +6,7 @@ function get_template($temp_fn, $str_arr="", $body_cut=false){
 	 * $str_arr - 치환문자열 배열
 	 * $body_cut - <body>~</body> 태그내의 소스만 가져옴
 	 */
-	$return_template = $str;
+	$return_template = "";
 	$temp_fn_fp = $_SERVER['DOCUMENT_ROOT']."../template/".$temp_fn;
 	if(file_exists($temp_fn_fp)){
 		$return_template = file_get_contents($temp_fn_fp);
