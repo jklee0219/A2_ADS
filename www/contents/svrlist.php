@@ -27,12 +27,12 @@ $svrlist   = getQueryResult($listqry);
         <thead>
             <tr class="linear">
             	<th>번호</th>
+                <th>상태</th>
                 <th>서버명</th>
                 <th>HOST IP</th>
                 <th>PORT</th>
                 <th>FTP ID</th>
                 <th>FTP PW</th>
-                <th>상태</th>
                 <th>등록일</th>
             </tr>
         </thead>
@@ -46,12 +46,12 @@ $svrlist   = getQueryResult($listqry);
 			?>
             <tr id="row_<?=$v['seq']?>" class='active<?=($use_str=="사용중") ? " success" : ""?>' data-toggle="modal" data-target="#svr_form" onclick="svrUpdateForm($(this))">
             	<td class="seq" value="<?=$v['seq']?>"><?=$no++?></td>
+                <td class="useyn" value="<?=$v['useyn']?>"><strong><?=$use_str?></strong></td>
                 <td class="title"><?=$v['title']?></td>
                 <td class="ip"><?=$v['ip']?></td>
                 <td class="port"><?=$v['port']?></td>
                 <td class="id"><?=$v['id']?></td>
                 <td class="pw"><?=$v['pw']?></td>
-                <td class="useyn" value="<?=$v['useyn']?>"><?=$use_str?></td>
                 <td><?=$v['wdate']?></td>
             </tr>
             <?php } ?>

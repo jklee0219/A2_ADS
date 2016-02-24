@@ -34,6 +34,8 @@ if($scale != "remove"){
 	$prev         = $first_page;
 	$next         = $last_page + 1;
 	$go_page      = $first_page + 1;
+}else{
+	$no = $total_record + 1;
 }
 $limit        = $scale != "remove" ? ' limit '.$first.', '.$scale : "";
 
