@@ -22,18 +22,19 @@ $adscount     = getQueryCount($cntqry);
 $limit    = "";
 
 $total_record = $adscount;
-$total_page   = ceil($total_record/$scale);
-$first        = $scale * ($page - 1);
-$no           = $total_record - $first + 1;
-$total_block  = ceil($total_page / 5);
-$block        = ceil($page / 5);
-$first_page   = ($block - 1) * 5;
-$last_page    = $total_block <= $block ? $total_page : $block * 5;
-$prev         = $first_page;
-$next         = $last_page + 1;
-$go_page      = $first_page + 1;
 $param        = $search_keyword ? '&sk='.$search_keyword : "";
-
+if($scale != "remove"){
+	$total_page   = ceil($total_record/$scale);
+	$first        = $scale * ($page - 1);
+	$no           = $total_record - $first + 1;
+	$total_block  = ceil($total_page / 5);
+	$block        = ceil($page / 5);
+	$first_page   = ($block - 1) * 5;
+	$last_page    = $total_block <= $block ? $total_page : $block * 5;
+	$prev         = $first_page;
+	$next         = $last_page + 1;
+	$go_page      = $first_page + 1;
+}
 $limit        = $scale != "remove" ? ' limit '.$first.', '.$scale : "";
 
 $adslist      = getQueryResult($listqry.$limit);

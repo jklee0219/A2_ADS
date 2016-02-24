@@ -190,6 +190,7 @@ function adFormSave(type){
 			var param = "type=adform_insert&grp_useyn="+gv1+"&grp_category="+gv2+"&grp_title="+gv3;
 			var sfunc = function(data){ 
 							if($(data).find("result").text() == "SUCCESS"){
+								var ads_id = $(data).find("insert_id").text();
 								$(".ads_form_body").each(function(){
 									if(ads_id) adsInsert($(this),ads_id,"I");
 								});

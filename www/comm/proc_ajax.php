@@ -233,6 +233,82 @@ switch ($type){
 		$xml .= "</root>";
 		break;
 		
+	case "svr_insert" :
+		$useyn = filter_input(INPUT_POST, 'useyn');
+		$title = filter_input(INPUT_POST, 'title');
+		$ip    = filter_input(INPUT_POST, 'ip');
+		$port  = filter_input(INPUT_POST, 'port');
+		$id    = filter_input(INPUT_POST, 'id');
+		$pw    = filter_input(INPUT_POST, 'pw');
+		$exec  = false;
+	
+		if($title && $ip && $port && $id && $pw){
+			$stmt = mysqli_prepare($dbconn, "INSERT INTO TB_SVRLIST (useyn, title, ip, port, id, pw) VALUES (?, ?, ?, ?, ?, ?)");
+			$bind = mysqli_stmt_bind_param($stmt, "ssssss", $useyn, $title, $ip, $port, $id, $pw);
+			$exec = mysqli_stmt_execute($stmt);
+			mysqli_stmt_close($stmt);
+		}
+	
+		$xml  = "<root>";
+		$xml .= "<result>".($exec ? "SUCCESS" : "FAIL")."</result>";
+		$xml .= "</root>";
+		break;
+		
+	case "svr_update" :
+		$seq   = filter_input(INPUT_POST, 'seq');
+		$useyn = filter_input(INPUT_POST, 'useyn');
+		$title = filter_input(INPUT_POST, 'title');
+		$ip    = filter_input(INPUT_POST, 'ip');
+		$port  = filter_input(INPUT_POST, 'port');
+		$id    = filter_input(INPUT_POST, 'id');
+		$pw    = filter_input(INPUT_POST, 'pw');
+		$exec  = false;
+	
+		if($seq){
+			$stmt = mysqli_prepare($dbconn, "UPDATE TB_SVRLIST SET useyn = ?, title = ?, ip = ?, port = ?, id = ?, pw = ?, udate = CURRENT_TIMESTAMP WHERE seq = ?");
+			$bind = mysqli_stmt_bind_param($stmt, "ssssssi", $useyn, $title, $ip, $port, $id, $pw, $seq);
+			$exec = mysqli_stmt_execute($stmt);
+			mysqli_stmt_close($stmt);
+		}
+	
+		$xml  = "<root>";
+		$xml .= "<result>".($exec ? "SUCCESS" : "FAIL")."</result>";
+		$xml .= "</root>";
+		break;
+		
+	case "svr_delete" :
+		$seq   = filter_input(INPUT_POST, 'seq');
+		$exec  = false;
+	
+		if($seq){
+			$stmt = mysqli_prepare($dbconn, "UPDATE TB_SVRLIST SET delyn = 'Y', ddate = CURRENT_TIMESTAMP WHERE seq = ?");
+			$bind = mysqli_stmt_bind_param($stmt, "i", $seq);
+			$exec = mysqli_stmt_execute($stmt);
+			mysqli_stmt_close($stmt);
+		}
+	
+		$xml  = "<root>";
+		$xml .= "<result>".($exec ? "SUCCESS" : "FAIL")."</result>";
+		$xml .= "</root>";
+		break;
+		
+	case "ftp_check" :
+		$ip    = filter_input(INPUT_POST, 'ip');
+		$port  = filter_input(INPUT_POST, 'port');
+		$id    = filter_input(INPUT_POST, 'id');
+		$pw    = filter_input(INPUT_POST, 'pw');
+
+		$conn_result = false;
+		if($conn_ftp = ftp_connect($ip, $port, 1)){
+			$conn_result = @ftp_login($conn_ftp, $id, $pw);
+			ftp_close($conn_ftp);
+		}
+	
+		$xml  = "<root>";
+		$xml .= "<result>".($conn_result ? "SUCCESS" : "FAIL")."</result>";
+		$xml .= "</root>";
+		break;
+		
 }
 
 if($dbconn) mysqli_close($dbconn);
