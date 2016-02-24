@@ -119,9 +119,12 @@ function categoryDelete(obj){
 	if(confirm('삭제 하시겠습니까?')){
 		var param = "type=category_delete&seq="+seq;
 		var sfunc = function(data){ 
-						if($(data).find("result").text() == "SUCCESS"){
+						var r = $(data).find("result").text();
+						if(r == "SUCCESS"){
 							categoryListInit();
 							categorySelectInit();
+						}else if(r == "REJECT"){
+							alert("해당 카테고리로 이미 등록된 광고그룹이 존재하므로 삭제가 불가능 합니다."); 
 						}else{
 							alert("오류 : DB등록"); 
 						}

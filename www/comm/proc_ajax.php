@@ -39,7 +39,7 @@ switch ($type){
 		$exec   = false;
 	
 		if($title && $seq){
-			$stmt = mysqli_prepare($dbconn, "UPDATE TB_CATEGORY SET TITLE = ? WHERE seq = ?");
+			$stmt = mysqli_prepare($dbconn, "UPDATE TB_CATEGORY SET TITLE = ?, udate = CURRENT_TIMESTAMP WHERE seq = ?");
 			$bind = mysqli_stmt_bind_param($stmt, "si", $title, $seq);
 			$exec = mysqli_stmt_execute($stmt);
 			mysqli_stmt_close($stmt);
@@ -55,14 +55,24 @@ switch ($type){
 		$exec   = false;
 	
 		if($seq){
-			$stmt = mysqli_prepare($dbconn, "DELETE FROM TB_CATEGORY WHERE seq = ?");
-			$bind = mysqli_stmt_bind_param($stmt, "i", $seq);
-			$exec = mysqli_stmt_execute($stmt);
-			mysqli_stmt_close($stmt);
+			$stmt = mysqli_prepare($dbconn, "SELECT COUNT(*) cnt FROM TB_ADS WHERE category = ? AND delyn = 'N'");
+			$stmt->bind_param("i", $seq);
+			$stmt->execute();
+			$stmt->bind_result($cnt);
+			$stmt->fetch();
+			$stmt->close();
+			$exec = "REJECT";
+			if($cnt == 0){
+				$stmt = mysqli_prepare($dbconn, "UPDATE TB_CATEGORY SET delyn = 'Y', ddate = CURRENT_TIMESTAMP WHERE seq = ?");
+				$bind = mysqli_stmt_bind_param($stmt, "i", $seq);
+				$exec = mysqli_stmt_execute($stmt);
+				$exec = $exec ? "SUCCESS" : "FAIL";
+				mysqli_stmt_close($stmt);
+			}
 		}
 	
 		$xml  = "<root>";
-		$xml .= "<result>".($exec ? "SUCCESS" : "FAIL")."</result>";
+		$xml .= "<result>".$exec."</result>";
 		$xml .= "</root>";
 		break;
 		
@@ -94,7 +104,7 @@ switch ($type){
 		$exec  = false;
 	
 		if($grp_useyn && $grp_category && $grp_title){
-			$stmt = mysqli_prepare($dbconn, "UPDATE TB_ADS SET useyn=?,category=?,title=? WHERE seq=?");
+			$stmt = mysqli_prepare($dbconn, "UPDATE TB_ADS SET useyn = ?, category = ?, title = ?, udate = CURRENT_TIMESTAMP WHERE seq = ?");
 			$bind = mysqli_stmt_bind_param($stmt, "sisi", $grp_useyn, $grp_category, $grp_title, $grp_seq);
 			$exec = mysqli_stmt_execute($stmt);
 			mysqli_stmt_close($stmt);
@@ -177,7 +187,7 @@ switch ($type){
 		$exec         = false;
 		
 		if($ad_seq){
-			$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET title=?,useyn=?,ratio=?,sdate=?,edate=?,width=?,height=?,script=? WHERE seq = ?");
+			$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET title = ?, useyn = ?, ratio = ?, sdate = ?, edate = ?, width = ?, height = ?, script = ?, udate = CURRENT_TIMESTAMP WHERE seq = ?");
 			$bind = mysqli_stmt_bind_param($stmt, "ssissiisi", $ad_title, $ad_useyn, $ad_ratio, $ad_sdate, $ad_edate, $ad_width, $ad_height, $ad_script, $ad_seq);
 		}else{
 			$stmt = mysqli_prepare($dbconn, "INSERT INTO TB_SCRIPTS (ref,title,useyn,ratio,sdate,edate,width,height,script) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -195,7 +205,7 @@ switch ($type){
 		$ad_seq = filter_input(INPUT_POST, 'ad_seq');
 		$exec   = false;
 	
-		$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET delyn='Y' WHERE seq = ?");
+		$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET delyn = 'Y', ddate = CURRENT_TIMESTAMP WHERE seq = ?");
 		$bind = mysqli_stmt_bind_param($stmt, "i", $ad_seq);
 		$exec = mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
@@ -209,11 +219,11 @@ switch ($type){
 		$ads_seq = filter_input(INPUT_POST, 'ads_seq');
 		$exec    = false;
 
-		$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET delyn='Y' WHERE ref = ?");
+		$stmt = mysqli_prepare($dbconn, "UPDATE TB_SCRIPTS SET delyn = 'Y', ddate = CURRENT_TIMESTAMP WHERE ref = ?");
 		$bind = mysqli_stmt_bind_param($stmt, "i", $ads_seq);
 		$exec = mysqli_stmt_execute($stmt);
 		
-		$stmt = mysqli_prepare($dbconn, "UPDATE TB_ADS SET delyn='Y' WHERE seq = ?");
+		$stmt = mysqli_prepare($dbconn, "UPDATE TB_ADS SET delyn = 'Y', ddate = CURRENT_TIMESTAMP WHERE seq = ?");
 		$bind = mysqli_stmt_bind_param($stmt, "i", $ads_seq);
 		$exec = mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);

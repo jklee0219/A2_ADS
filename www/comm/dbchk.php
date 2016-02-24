@@ -13,8 +13,8 @@ $TB_ADS     = "CREATE TABLE `TB_ADS` (
    	           `useyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '사용여부',
    	           `delyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '삭제여부',
    			   `wdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '등록일자',
-   			   `udate` TIMESTAMP DEFAULT NULL COMMENT '수정일자',
-   			   `ddate` TIMESTAMP DEFAULT NULL COMMENT '삭제일자',
+   			   `udate` TIMESTAMP COMMENT '수정일자',
+   			   `ddate` TIMESTAMP COMMENT '삭제일자',
    			   PRIMARY KEY (`seq`),
 			   FOREIGN KEY (`category`) REFERENCES `TB_CATEGORY` (`seq`),
 			   FULLTEXT TITLE_FIDX (`title`)
@@ -27,14 +27,14 @@ $TB_SCRIPTS = "CREATE TABLE `TB_SCRIPTS` (
                `script` text COMMENT '광고스크립트',
                `width` int(1) unsigned DEFAULT 0 COMMENT '광고가로사이즈',
    			   `height` int(1) unsigned DEFAULT 0 COMMENT '광고세로사이즈',
-   			   `sdate` TIMESTAMP DEFAULT NULL COMMENT '광고시작일',
-   			   `edate` TIMESTAMP DEFAULT NULL COMMENT '광고종료일',
+   			   `sdate` TIMESTAMP COMMENT '광고시작일',
+   			   `edate` TIMESTAMP COMMENT '광고종료일',
    	           `ratio` int(1) unsigned DEFAULT 0 COMMENT '광고비율',
    	           `useyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '사용여부',
    	           `delyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '삭제여부',
    			   `wdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '등록일자',
-   			   `udate` TIMESTAMP DEFAULT NULL COMMENT '수정일자',
-   			   `ddate` TIMESTAMP DEFAULT NULL COMMENT '삭제일자',
+   			   `udate` TIMESTAMP COMMENT '수정일자',
+   			   `ddate` TIMESTAMP COMMENT '삭제일자',
    			   PRIMARY KEY (`seq`),
 			   FOREIGN KEY (`ref`) REFERENCES `TB_ADS` (`seq`),
 			   FULLTEXT TITLE_FIDX (`title`),
@@ -48,8 +48,8 @@ $TB_CATEGORY = "CREATE TABLE `TB_CATEGORY` (
 				`useyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '사용여부',
 				`delyn` enum('Y','N') NOT NULL DEFAULT 'N' COMMENT '삭제여부',
 				`wdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일자',
-				`udate` TIMESTAMP DEFAULT NULL COMMENT '수정일자',
-				`ddate` TIMESTAMP DEFAULT NULL COMMENT '삭제일자',
+				`udate` TIMESTAMP COMMENT '수정일자',
+				`ddate` TIMESTAMP COMMENT '삭제일자',
 				PRIMARY KEY (`seq`)
 				) ENGINE=MYISAM CHARSET=utf8 COMMENT='카테고리 관리'";
 
@@ -62,7 +62,6 @@ if(mysqli_fetch_row($res)[0] == 0){
 }
 
 $res = mysqli_query($dbconn, " SELECT COUNT(*) AS count FROM TB_INFO ");
-var_dump($res);
 if(mysqli_fetch_row($res)[0] != 1){ get_template("infoform.html",array("[COMPANY_NAME]" => "")); }
 
 $res = mysqli_query($dbconn, " SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = '".CONNECT_DB_NAME."' and table_name = 'TB_CATEGORY' ");
